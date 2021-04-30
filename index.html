@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Document</title>
+  <script src="https://unpkg.com/vue"></script>
+</head>
+<style>
+
+  [contenteditable] {
+    outline: 0px solid transparent;
+  }
+
+  body {
+    background-color: rgb(245, 245, 245);
+  }
+
+  div#app {
+    background-color: #fff;
+    margin: 80px 40px;
+    padding: 20px 15px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 7px rgb(226, 226, 226);
+  }
+
+  /* .bullet {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .bullet-style {
+    display: flex;
+    align-items: center;
+  }
+
+  .bullet-text {
+    display: flex;
+  } */
+</style>
+<body>
+  <div id="app">
+    <bullet
+      v-for="note in notes" :note="note" :key="note.id" :ref="'bullet-' + note.id"
+      v-on:edit-bullet="editBullet"
+      v-on:add-bullet="addBullet"
+      v-on:remove-bullet="removeBullet"
+      v-on:move-up="moveUp"
+      v-on:move-down="moveDown"></bullet>
+  </div>
+</body>
+
+<script src="vue.js"></script>
+
+</html>
+
+<!-- Next TODOs -->
+<!-- add static bullet style -->
+<!-- adding static bullet element bugs keycodes, moving and focusing on next or preivous bullet -->
+<!-- add listener to change bullet style dynamically via "/" -->
