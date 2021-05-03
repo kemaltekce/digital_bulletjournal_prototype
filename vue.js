@@ -1,6 +1,10 @@
 Vue.component('bullet', {
-    props: ['note'],
+    props: ['note', 'styles'],
     template: `
+    <div class="bullet">
+      <div class="bullet-style" v-if="note.style" :id="note.style">
+        <span v-html="styles[note.style].content" :class="styles[note.style].style"></span>
+        </div>
       <div
         class="bullet-text"
         contenteditable="true"
@@ -10,16 +14,22 @@ Vue.component('bullet', {
         @keydown.delete="removeBullet"
         @keydown.up="moveUp"
         @keydown.down="moveDown"></div>
+    </div>
     `,
     methods: {
       edit(event) {
         var src = event.target.innerText
-        // this.note.text = src
-        // this.$set(this.note, 'text', src)
         this.$emit('edit-bullet', {note: this.note, text: src})
       },
       endEdit(event) {
-        this.$emit('add-bullet', this.note.position)
+        var text = event.target.innerText
+        if (text.includes("/done")) {
+          this.changeStyle(event, this.note, text, "done")
+        } else if (text.includes("/todo")) {
+          this.changeStyle(event, this.note, text, "todo")
+        } else {
+          this.$emit('add-bullet', this.note)
+        }
       },
       removeBullet(event) {
         if (event.target.innerText.length === 0) {
@@ -35,18 +45,27 @@ Vue.component('bullet', {
       moveDown(event) {
         this.$emit(
           'move-down', {id: this.note.id, pos: this.note.position, event: event})
+      },
+      changeStyle(event, note, text, style) {
+        var adjusted_text = text.replace("/" + style, '')
+        this.$emit('edit-bullet', {note: note, text: adjusted_text})
+        event.target.innerText = adjusted_text
+        this.$emit('change-style', {note: note, style: style})
       }
     }
   })
-
   var app = new Vue({
     el: '#app',
     data: function() {
       return {
         notes: [
-          {id: this.uuid(), text: 'I am a note.', position: 1},
-          {id: this.uuid(), text: 'I am also a note.', position: 2}
-        ]
+          {id: this.uuid(), text: 'I am a note.', position: 1, style: 'todo'},
+          {id: this.uuid(), text: 'I am also a note.', position: 2, style: 'done'}
+        ],
+        styles: {
+          todo: {content: '<i class="fas fa-circle"></i>', style: 'bullet-style-todo'},
+          done: {content: '<i class="fas fa-times"></i>', style: 'bullet-style-done'}
+        }
       }
     },
     updated: function () {
@@ -72,18 +91,23 @@ Vue.component('bullet', {
         this.$set(info.note, 'text', info.text)
         this.$forceUpdate()
       },
-      addBullet(recent_pos) {
+      addBullet(note) {
+        var recent_pos = note.position
         this.notes.forEach(function(note) {
           if (note.position > recent_pos) {note.position++}
         })
         var newPos = recent_pos + 1
         var newID = this.uuid()
-        this.notes.push({id: newID, text:"", position: newPos})
+        var newBullet = {id: newID, text:"", position: newPos, style: note.style}
+        this.notes.push(newBullet)
         this.notes.sort((x, y) => (x.position > y.position) ? 1 : -1)
         this.$nextTick(() => {
-          var newBullet = this.$refs['bullet-' + newID]
-          newBullet[0].$el.focus()
+          this.moveTo(undefined, newBullet)
         })
+      },
+      changeStyle(args) {
+        this.$set(args.note, 'style', args.style)
+        this.moveTo(args.event, args.note)
       },
       removeBullet(args) {
         var deleteID = args.id
@@ -111,30 +135,32 @@ Vue.component('bullet', {
       moveTo(event, bullet) {
         if (bullet) {
           this.$nextTick(() => {
-            event.preventDefault()
-            this.$refs['bullet-' + bullet.id][0].$el.focus()
+            if (event) {
+              event.preventDefault()
+            }
+            this.$refs['bullet-' + bullet.id][0].$el.querySelector('div.bullet-text').focus()
             this.setEndOfContenteditable(
-              this.$refs['bullet-' + bullet.id][0].$el)
+              this.$refs['bullet-' + bullet.id][0].$el.querySelector('div.bullet-text'))
           })
         }
       },
       setEndOfContenteditable(contentEditableElement) {
         var range,selection;
-        if(document.createRange)//Firefox, Chrome, Opera, Safari, IE 9+
+        if(document.createRange)
         {
-            range = document.createRange();//Create a range (a range is a like the selection but invisible)
-            range.selectNodeContents(contentEditableElement);//Select the entire contents of the element with the range
-            range.collapse(false);//collapse the range to the end point. false means collapse to end rather than the start
-            selection = window.getSelection();//get the selection object (allows you to change selection)
-            selection.removeAllRanges();//remove any selections already made
-            selection.addRange(range);//make the range you have just created the visible selection
+            range = document.createRange();
+            range.selectNodeContents(contentEditableElement);
+            range.collapse(false);
+            selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
         }
-        else if(document.selection)//IE 8 and lower
+        else if(document.selection)
         {
-            range = document.body.createTextRange();//Create a range (a range is a like the selection but invisible)
-            range.moveToElementText(contentEditableElement);//Select the entire contents of the element with the range
-            range.collapse(false);//collapse the range to the end point. false means collapse to end rather than the start
-            range.select();//Select the range (make it the visible selection
+            range = document.body.createTextRange();
+            range.moveToElementText(contentEditableElement);
+            range.collapse(false);
+            range.select();
         }
       }
     }

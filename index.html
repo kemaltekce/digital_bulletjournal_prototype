@@ -3,6 +3,7 @@
 <head>
   <title>Document</title>
   <script src="https://unpkg.com/vue"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 </head>
 <style>
 
@@ -12,6 +13,8 @@
 
   body {
     background-color: rgb(245, 245, 245);
+    font-size: 16px;
+    font-family: Avenir;
   }
 
   div#app {
@@ -22,7 +25,7 @@
     box-shadow: 0px 0px 7px rgb(226, 226, 226);
   }
 
-  /* .bullet {
+  .bullet {
     display: flex;
     align-items: flex-start;
   }
@@ -30,17 +33,38 @@
   .bullet-style {
     display: flex;
     align-items: center;
+    justify-content: center;
+    width: 24px;
+  }
+
+  .bullet-style-todo {
+    font-size: 2px;
+    transform: translateY(70%);
+  }
+
+  .bullet-style-done {
+    font-size: 14px;
+    transform: translateY(10%);
+    color: rgb(185, 185, 185);
+  }
+
+  #done + div {
+    color: rgb(185, 185, 185);
   }
 
   .bullet-text {
     display: flex;
-  } */
+    flex: 1 1 0px;
+  }
+
 </style>
 <body>
   <div id="app">
     <bullet
       v-for="note in notes" :note="note" :key="note.id" :ref="'bullet-' + note.id"
+      :styles="styles"
       v-on:edit-bullet="editBullet"
+      v-on:change-style="changeStyle"
       v-on:add-bullet="addBullet"
       v-on:remove-bullet="removeBullet"
       v-on:move-up="moveUp"
@@ -53,6 +77,5 @@
 </html>
 
 <!-- Next TODOs -->
-<!-- add static bullet style -->
-<!-- adding static bullet element bugs keycodes, moving and focusing on next or preivous bullet -->
-<!-- add listener to change bullet style dynamically via "/" -->
+<!-- add style for empty note, and migrations, and normal note -->
+<!-- instead of passing args to methods pass whole note -->
