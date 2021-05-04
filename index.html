@@ -25,6 +25,14 @@
     box-shadow: 0px 0px 7px rgb(226, 226, 226);
   }
 
+  .section-title {
+    font-size: 24px;
+  }
+
+  .bullet-list {
+    padding: 15px 0px;
+  }
+
   .bullet {
     display: flex;
     align-items: flex-start;
@@ -75,15 +83,21 @@
 </style>
 <body>
   <div id="app">
-    <bullet
-      v-for="note in notes" :note="note" :key="note.id" :ref="'bullet-' + note.id"
-      :styles="styles"
-      v-on:edit-bullet="editBullet"
-      v-on:change-style="changeStyle"
-      v-on:add-bullet="addBullet"
-      v-on:remove-bullet="removeBullet"
-      v-on:move-up="moveUp"
-      v-on:move-down="moveDown"></bullet>
+    <section-title :title="sectionTitle" :key="sectionTitle.id" :ref="'section-' + sectionTitle.id"
+      v-on:edit-section-title="editText"
+      v-on:move-to-first-bullet="moveToFirstBullet">
+    </section-title>
+    <div class="bullet-list">
+      <bullet
+        v-for="note in notes" :note="note" :key="note.id" :ref="'bullet-' + note.id"
+        :styles="styles"
+        v-on:edit-bullet="editText"
+        v-on:change-style="changeStyle"
+        v-on:add-bullet="addBullet"
+        v-on:remove-bullet="removeBullet"
+        v-on:move-up="moveUp"
+        v-on:move-down="moveDown"></bullet>
+    </div>
   </div>
 </body>
 
@@ -93,3 +107,7 @@
 
 <!-- Next TODOs -->
 <!-- instead of passing args to methods pass whole note -->
+<!-- style section title -->
+<!-- press up at first note, go to section title. maybe we can adjust and make use of moveTo. Right now only for bullets -->
+<!-- pressing enter at the beginning create a new bullet above  -->
+<!-- instead of section title heading bullet -->
