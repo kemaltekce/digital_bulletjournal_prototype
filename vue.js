@@ -27,6 +27,14 @@ Vue.component('bullet', {
           this.changeStyle(event, this.note, text, "done")
         } else if (text.includes("/todo")) {
           this.changeStyle(event, this.note, text, "todo")
+        } else if (text.includes("/empty")) {
+          this.changeStyle(event, this.note, text, "empty")
+        } else if (text.includes("/note")) {
+          this.changeStyle(event, this.note, text, "note")
+        } else if (text.includes("/migrate")) {
+          this.changeStyle(event, this.note, text, "migrate")
+        } else if (text.includes("/future")) {
+          this.changeStyle(event, this.note, text, "future")
         } else {
           this.$emit('add-bullet', this.note)
         }
@@ -50,7 +58,11 @@ Vue.component('bullet', {
         var adjusted_text = text.replace("/" + style, '')
         this.$emit('edit-bullet', {note: note, text: adjusted_text})
         event.target.innerText = adjusted_text
-        this.$emit('change-style', {note: note, style: style})
+        if (style === 'empty') {
+          this.$emit('change-style', {note: note, style: undefined})
+        } else {
+          this.$emit('change-style', {note: note, style: style})
+        }
       }
     }
   })
@@ -64,7 +76,11 @@ Vue.component('bullet', {
         ],
         styles: {
           todo: {content: '<i class="fas fa-circle"></i>', style: 'bullet-style-todo'},
-          done: {content: '<i class="fas fa-times"></i>', style: 'bullet-style-done'}
+          done: {content: '<i class="fas fa-times"></i>', style: 'bullet-style-done'},
+          empty: {content: '', style: undefined},
+          note: {content: '<i class="fas fa-minus"></i>', style: 'bullet-style-note'},
+          migrate: {content: '<i class="fas fa-chevron-right"></i>', style: 'bullet-style-migrate'},
+          future: {content: '<i class="fas fa-chevron-left"></i>', style: 'bullet-style-future'}
         }
       }
     },
