@@ -112,10 +112,17 @@ Vue.component('bullet', {
       },
       addBullet(note) {
         var recent_pos = note.position
-        this.notes.forEach(function(note) {
-          if (note.position > recent_pos) {note.position++}
-        })
-        var newPos = recent_pos + 1
+        if (window.getSelection()['anchorOffset'] === 0) {
+          this.notes.forEach(function(note) {
+            if (note.position >= recent_pos) {note.position++}
+          })
+          var newPos = recent_pos
+        } else {
+          this.notes.forEach(function(note) {
+            if (note.position > recent_pos) {note.position++}
+          })
+          var newPos = recent_pos + 1
+        }
         var newID = this.uuid()
         var newBullet = {id: newID, text:"", position: newPos, style: note.style}
         this.notes.push(newBullet)
