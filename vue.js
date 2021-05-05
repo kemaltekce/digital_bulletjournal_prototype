@@ -35,6 +35,8 @@ Vue.component('bullet', {
           this.changeStyle(event, this.note, text, "migrate")
         } else if (text.includes("/future")) {
           this.changeStyle(event, this.note, text, "future")
+        } else if (text.includes("/heading")) {
+          this.changeStyle(event, this.note, text, "heading")
         } else {
           this.$emit('add-bullet', this.note)
         }
@@ -80,7 +82,8 @@ Vue.component('bullet', {
           empty: {content: '', style: undefined},
           note: {content: '<i class="fas fa-minus"></i>', style: 'bullet-style-note'},
           migrate: {content: '<i class="fas fa-chevron-right"></i>', style: 'bullet-style-migrate'},
-          future: {content: '<i class="fas fa-chevron-left"></i>', style: 'bullet-style-future'}
+          future: {content: '<i class="fas fa-chevron-left"></i>', style: 'bullet-style-future'},
+          heading: {content: '', style: undefined}
         }
       }
     },
