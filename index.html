@@ -5,21 +5,24 @@
   <script src="https://unpkg.com/vue"></script>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
   <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
 </head>
 <body>
   <div id="app">
-      <div class="navigation">
-        <button
-        v-for="page in pages"
-        :key="'nav-' + page.id"
-        :ref="'nav-' + page.id"
-        @click="loadPage(page.id)">{{ page.title }}</button>
-      </div>
-      <page
-        :title="page.title" :collections="page.collections"
-        :key="page.id"
-        v-on:edit-page-title="editPageTitle"
-        v-on:edit-bullet-text="editBulletText"></page>
+    <div class="navigation">
+      <div
+        class="button"
+        v-for="navpage in pages"
+        :class="{ highlighted: page.id === navpage.id }"
+        :key="'nav-' + navpage.id"
+        :ref="'nav-' + navpage.id"
+        @click="loadPage(navpage.id)">{{ navpage.title }}</div>
+    </div>
+    <page
+      :title="page.title" :collections="page.collections"
+      :key="page.id"
+      v-on:edit-page-title="editPageTitle"
+      v-on:edit-bullet-text="editBulletText"></page>
   </div>
 </body>
 

@@ -6,7 +6,7 @@ var app = new Vue({
       pages: [
         {
           id: this.uuid(),
-          title: 'Monthly Log',
+          title: '🍉 Monthly Log',
           collections: [
             {
               id: this.uuid(),
@@ -26,7 +26,7 @@ var app = new Vue({
         },
         {
           id: this.uuid(),
-          title: 'Weekly Log',
+          title: '🎒 Weekly Log',
           collections: [
             {
               id: this.uuid(),
