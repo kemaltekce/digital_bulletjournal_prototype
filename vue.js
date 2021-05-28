@@ -63,18 +63,30 @@ var app = new Vue({
     this.page = this.pages[0]
     this.addDefaultBullet()
   },
+  mounted() {
+    this.focusFirstBullet()
+  },
   updated() {
     this.addDefaultBullet()
   },
   methods: {
     uuid() {
       return Math.random().toString(16).slice(2)},
+    focusFirstBullet() {
+      var pageRef = this.$refs['page-' + this.page.id].$refs
+      var collectionRefs = pageRef['collection-' + this.page.collections[0].id][0].$refs
+      collectionRefs['bullet-' + this.page.collections[0].bullets[0].id][0].$el.querySelector('div.bullet-text').focus()
+      this.setEndOfContenteditable(collectionRefs['bullet-' + this.page.collections[0].bullets[0].id][0].$el.querySelector('div.bullet-text'))
+    },
     editPageTitle(newTitle) {
       this.$set(this.page, 'title', newTitle)
     },
     loadPage(id) {
       const isID = (element) => element.id === id
       this.page = this.pages[this.pages.findIndex(isID)]
+      this.$nextTick(() => {
+        this.focusFirstBullet()
+      })
     },
     addNewPage() {
       const newPage = {
@@ -108,6 +120,25 @@ var app = new Vue({
             {id: this.uuid(), text:"", position: lastBullet.position + 1, style: undefined})
         }
       })
+    },
+    setEndOfContenteditable(contentEditableElement) {
+      var range,selection;
+      if(document.createRange)
+      {
+          range = document.createRange();
+          range.selectNodeContents(contentEditableElement);
+          range.collapse(false);
+          selection = window.getSelection();
+          selection.removeAllRanges();
+          selection.addRange(range);
+      }
+      else if(document.selection)
+      {
+          range = document.body.createTextRange();
+          range.moveToElementText(contentEditableElement);
+          range.collapse(false);
+          range.select();
+      }
     }
   }
 })

@@ -23,7 +23,7 @@
     </div>
     <page
       :title="page.title" :collections="page.collections" :styles="styles"
-      :key="page.id"
+      :key="page.id" :ref="'page-' + page.id"
       v-on:edit-page-title="editPageTitle"
       v-on:edit-bullet-text="editBulletText"></page>
   </div>
