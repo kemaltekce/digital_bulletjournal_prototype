@@ -17,6 +17,9 @@
         :key="'nav-' + navpage.id"
         :ref="'nav-' + navpage.id"
         @click="loadPage(navpage.id)">{{ navpage.title }}</div>
+      <div
+        class="button"
+        @click="addNewPage"><span class="plus">+</span> add new page</div>
     </div>
     <page
       :title="page.title" :collections="page.collections"
