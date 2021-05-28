@@ -1,6 +1,6 @@
 body {
   background-color: #F0F0F4;
-  font-size: 16px;
+  font-size: 18px;
   font-family: Avenir;
   color: #101010;
 }
@@ -13,6 +13,8 @@ body {
   display: flex;
   flex-direction: row;
 }
+
+/* navigation style */
 
 .navigation {
   display: flex;
@@ -40,6 +42,8 @@ body {
   font-weight: 800;
 }
 
+/* page styles */
+
 .page {
   margin: 10px 40px;
   flex: 1;
@@ -48,7 +52,22 @@ body {
 .pagetitle {
   font-size: 48px;
   margin: 10px 0px;
+  /* position: relative;
+  overflow: hidden; */
 }
+
+/* .pagetitle::after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  vertical-align: bottom;
+  width: 100%;
+  margin-left: 20px;
+  border-top: 3px solid #101010;
+} */
+
+/* collection styles */
 
 .collection {
   background-color: #fff;
@@ -62,4 +81,60 @@ body {
   margin-top: 0px;
 }
 
+/* bullet style */
 
+.bullet {
+  display: flex;
+  align-items: flex-start;
+}
+
+.bullet-style {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+}
+
+.bullet-style-todo {
+  font-size: 2px;
+  transform: translateY(95%);
+}
+
+.bullet-style-done {
+  font-size: 14px;
+  transform: translateY(15%);
+  color: rgb(185, 185, 185);
+}
+
+#done + div {
+  color: rgb(185, 185, 185);
+}
+
+.bullet-style-note {
+  font-size: 10px;
+  transform: translateY(40%);
+}
+
+.bullet-style-migrate {
+  font-size: 14px;
+  transform: translateY(6%);
+}
+
+.bullet-style-future {
+  font-size: 14px;
+  transform: translateY(6%);
+}
+
+#heading {
+  width: 0px;
+}
+
+#heading + div {
+  font-size: 24px;
+  padding: 16px 4px;
+}
+
+.bullet-text {
+  display: flex;
+  flex: 1 1 0px;
+}

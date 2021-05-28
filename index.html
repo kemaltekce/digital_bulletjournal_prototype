@@ -22,7 +22,7 @@
         @click="addNewPage"><span class="plus">+</span> add new page</div>
     </div>
     <page
-      :title="page.title" :collections="page.collections"
+      :title="page.title" :collections="page.collections" :styles="styles"
       :key="page.id"
       v-on:edit-page-title="editPageTitle"
       v-on:edit-bullet-text="editBulletText"></page>

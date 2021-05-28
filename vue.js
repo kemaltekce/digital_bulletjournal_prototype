@@ -3,6 +3,15 @@ var app = new Vue({
   data: function() {
     return {
       page: {},
+      styles: {
+        todo: {content: '<i class="fas fa-circle"></i>', style: 'bullet-style-todo'},
+        done: {content: '<i class="fas fa-times"></i>', style: 'bullet-style-done'},
+        empty: {content: '', style: undefined},
+        note: {content: '<i class="fas fa-minus"></i>', style: 'bullet-style-note'},
+        migrate: {content: '<i class="fas fa-chevron-right"></i>', style: 'bullet-style-migrate'},
+        future: {content: '<i class="fas fa-chevron-left"></i>', style: 'bullet-style-future'},
+        heading: {content: '', style: undefined}
+      },
       pages: [
         {
           id: this.uuid(),
@@ -10,6 +19,7 @@ var app = new Vue({
           collections: [
             {
               id: this.uuid(),
+              position: 0,
               bullets: [
                 {id: this.uuid(), text: 'I am a note.', position: 0, style: 'todo'},
                 {id: this.uuid(), text: 'I am also a note.', position: 1, style: 'done'}
@@ -17,6 +27,7 @@ var app = new Vue({
             },
             {
               id: this.uuid(),
+              position: 1,
               bullets: [
                 {id: this.uuid(), text: 'I am a note again.', position: 0, style: 'todo'},
                 {id: this.uuid(), text: 'I am also a note again.', position: 1, style: 'done'}
@@ -30,6 +41,7 @@ var app = new Vue({
           collections: [
             {
               id: this.uuid(),
+              position: 0,
               bullets: [
                 {id: this.uuid(), text: 'I am a weekly note.', position: 0, style: 'todo'},
                 {id: this.uuid(), text: 'I am also a weekly note.', position: 1, style: 'done'}
@@ -37,8 +49,9 @@ var app = new Vue({
             },
             {
               id: this.uuid(),
+              position: 1,
               bullets: [
-                {id: this.uuid(), text: 'I am a weekly note again.', position: 0, style: 'todo'},
+                {id: this.uuid(), text: 'I am a weekly note again.', position: 0, style: 'note'},
               ]
             },
           ],
@@ -71,7 +84,7 @@ var app = new Vue({
           {
             id: this.uuid(),
             bullets: [
-              {id: this.uuid(), text: '', position: 0, style: 'empty'},
+              {id: this.uuid(), text: '', position: 0, style: undefined},
             ]
           }
         ],
@@ -89,10 +102,10 @@ var app = new Vue({
       this.page.collections.forEach(collection => {
         var lastBullet = collection.bullets[collection.bullets.length - 1]
         if (lastBullet === undefined) {
-          collection.bullets.push({id: this.uuid(), text:"", position: 0, style: 'empty'})
+          collection.bullets.push({id: this.uuid(), text:"", position: 0, style: undefined})
         } else if (lastBullet.text !== '') {
           collection.bullets.push(
-            {id: this.uuid(), text:"", position: lastBullet.position + 1, style: 'empty'})
+            {id: this.uuid(), text:"", position: lastBullet.position + 1, style: undefined})
         }
       })
     }
