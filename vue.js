@@ -108,13 +108,13 @@ var app = new Vue({
       const isBullet = (element) => element.id === bulletID
       const collectionIndex = this.page.collections.findIndex(isCollection)
       const bulletIndex = this.page.collections[collectionIndex].bullets.findIndex(isBullet)
-      this.$set(this.page.collections[collectionIndex].bullets[bulletIndex], 'text', newText)
+      if (bulletIndex !== -1) {
+        this.$set(this.page.collections[collectionIndex].bullets[bulletIndex], 'text', newText)
+      }
       this.$forceUpdate()
     },
     addBullet({currentCollection, currentBullet, currentText}) {
-      var isCollection = (element) => element.id === currentCollection.id
-      var collectionIndex = this.page.collections.findIndex(isCollection)
-      var bullets = this.page.collections[collectionIndex].bullets
+      var {collectionIndex, bullets} = this.getBullets(currentCollection)
 
       var currentPosition = currentBullet.position
       if (window.getSelection()['anchorOffset'] === 0 && (currentBullet.text.length !== 0 || currentText.length !== 0)) {
@@ -136,6 +136,28 @@ var app = new Vue({
       this.$set(this.page.collections[collectionIndex], 'bullets', bullets)
       this.moveTo({page: this.page, bullet: newBullet, collection: currentCollection})
     },
+    removeBullet({currentCollection, currentBullet}) {
+      var {collectionIndex, bullets} = this.getBullets(currentCollection)
+
+      var isBullet = (element) => element.id === currentBullet.id
+      var bulletIndex = this.page.collections[collectionIndex].bullets.findIndex(isBullet)
+      var previousBullet = this.page.collections[collectionIndex].bullets[bulletIndex - 1]
+
+      var deleteIndex = (bullet) => bullet.id === currentBullet.id
+      bullets.splice(bullets.findIndex(deleteIndex), 1)
+      bullets.forEach(function(bullet) {
+        if (bullet.position > currentBullet.position) {bullet.position--}
+      })
+
+      this.$set(this.page.collections[collectionIndex], 'bullets', bullets)
+      if (previousBullet) {
+        this.moveTo({page: this.page, bullet: previousBullet, collection: currentCollection})
+      } else {
+        this.$nextTick(() => {
+          this.moveTo({page: this.page, bullet: this.page.collections[collectionIndex].bullets[0], collection: currentCollection})
+        })
+      }
+    },
     moveTo({page, bullet, collection}) {
       this.$nextTick(() => {
         var collectionRefs = this.$refs['page-' + page.id].$refs['collection-' + collection.id][0].$refs
@@ -143,6 +165,12 @@ var app = new Vue({
         this.setEndOfContenteditable(
           collectionRefs['bullet-' + bullet.id][0].$el.querySelector('div.bullet-text'))
       })
+    },
+    getBullets(collection) {
+      var isCollection = (element) => element.id === collection.id
+      var collectionIndex = this.page.collections.findIndex(isCollection)
+      var bullets = this.page.collections[collectionIndex].bullets
+      return {collectionIndex, bullets}
     },
     addDefaultBullet() {
       this.page.collections.forEach(collection => {

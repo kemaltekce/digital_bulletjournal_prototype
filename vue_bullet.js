@@ -12,7 +12,8 @@ Vue.component('bullet', {
         @blur="edit"
         @keydown.up="moveUp"
         @keydown.down="moveDown"
-        @keydown.enter.prevent="endEdit"></div>
+        @keydown.enter.prevent="endEdit"
+        @keydown.delete="removeBullet"></div>
     </div>
   `,
   methods: {
@@ -26,5 +27,13 @@ Vue.component('bullet', {
       var currentText = event.target.innerText
       this.$emit('add-bullet', {currentBullet: this.bullet, currentText: currentText})
     },
+    removeBullet(event) {
+      if (event.target.innerText.length === 0) {
+        this.$emit('remove-bullet', this.bullet)
+        this.$nextTick(() => {
+            event.preventDefault()
+        })
+      }
+    }
   }
 })
