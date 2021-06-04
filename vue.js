@@ -117,7 +117,7 @@ var app = new Vue({
       var bullets = this.page.collections[collectionIndex].bullets
 
       var currentPosition = currentBullet.position
-      if (window.getSelection()['anchorOffset'] === 0 && (currentBullet.text.length !== 0 || currentText !== 0)) {
+      if (window.getSelection()['anchorOffset'] === 0 && (currentBullet.text.length !== 0 || currentText.length !== 0)) {
         bullets.forEach(function(bullet) {
           if (bullet.position >= currentPosition) {bullet.position++}
         })
