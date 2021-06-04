@@ -11,7 +11,8 @@ Vue.component('bullet', {
         v-text="bullet.text"
         @blur="edit"
         @keydown.up="moveUp"
-        @keydown.down="moveDown"></div>
+        @keydown.down="moveDown"
+        @keydown.enter.prevent="endEdit"></div>
     </div>
   `,
   methods: {
@@ -21,5 +22,9 @@ Vue.component('bullet', {
     },
     moveUp(event) {this.$emit('move-up', {currentBullet: this.bullet, event: event})},
     moveDown(event) {this.$emit('move-down', {currentBullet: this.bullet, event: event})},
+    endEdit(event) {
+      var currentText = event.target.innerText
+      this.$emit('add-bullet', {currentBullet: this.bullet, currentText: currentText})
+    },
   }
 })

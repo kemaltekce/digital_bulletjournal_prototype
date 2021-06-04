@@ -3,6 +3,7 @@ body {
   font-size: 18px;
   font-family: Avenir;
   color: #101010;
+  white-space: pre-line;
 }
 
 [contenteditable] {

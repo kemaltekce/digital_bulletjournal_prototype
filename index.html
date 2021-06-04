@@ -25,7 +25,8 @@
       :title="page.title" :collections="page.collections" :styles="styles"
       :key="page.id" :ref="'page-' + page.id"
       v-on:edit-page-title="editPageTitle"
-      v-on:edit-bullet-text="editBulletText"></page>
+      v-on:edit-bullet-text="editBulletText"
+      v-on:add-bullet="addBullet"></page>
   </div>
 </body>
 

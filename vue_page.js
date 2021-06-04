@@ -15,7 +15,8 @@ Vue.component('page', {
           :ref="'collection-' + collection.id"
           v-on:edit-bullet-text="editBulletText"
           v-on:move-down="moveDown"
-          v-on:move-up="moveUp"></collection>
+          v-on:move-up="moveUp"
+          v-on:add-bullet="addBullet"></collection>
       </div>
     </div>
   `,
@@ -30,6 +31,9 @@ Vue.component('page', {
     },
     editBulletText({collectionID, bulletID, newText}) {
       this.$emit('edit-bullet-text', {collectionID, bulletID, newText})
+    },
+    addBullet({currentCollection, currentBullet, currentText}) {
+      this.$emit('add-bullet', {currentCollection, currentBullet, currentText})
     },
     moveDown({currentCollection, event}) {
       var currentPos = currentCollection.position
