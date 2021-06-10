@@ -118,12 +118,12 @@ body {
 
 .bullet-style-migrate {
   font-size: 14px;
-  transform: translateY(6%);
+  transform: translateY(10%);
 }
 
 .bullet-style-future {
   font-size: 14px;
-  transform: translateY(6%);
+  transform: translateY(10%);
 }
 
 #heading {
@@ -131,11 +131,21 @@ body {
 }
 
 #heading + div {
-  font-size: 24px;
-  padding: 16px 4px;
+  font-size: 36px;
+  font-weight: 500;
+  padding: 30px 4px 10px;
+}
+
+.collection > .bullet:first-child > #heading + div {
+  padding-top: 0px
 }
 
 .bullet-text {
   display: flex;
   flex: 1 1 0px;
+  padding-left: 4px
+}
+
+.bullet-style + .bullet-text {
+  padding-left: 0px;
 }

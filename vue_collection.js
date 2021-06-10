@@ -9,6 +9,7 @@ Vue.component('collection', {
         :key="bullet.id"
         :ref="'bullet-' + bullet.id"
         v-on:edit-bullet-text="editBulletText"
+        v-on:change-bullet-style="changeBulletStyle"
         v-on:move-up="moveUp"
         v-on:move-down="moveDown"
         v-on:add-bullet="addBullet"
@@ -21,6 +22,11 @@ Vue.component('collection', {
       this.$emit(
         'edit-bullet-text',
         {collectionID: this.collection.id, bulletID: id, newText: newText})
+    },
+    changeBulletStyle({id, newStyle}) {
+      this.$emit(
+        'change-bullet-style',
+        {collectionID: this.collection.id, bulletID: id, newStyle: newStyle})
     },
     addBullet({currentBullet, currentText}) {
       this.$emit('add-bullet', {currentCollection: this.collection, currentBullet: currentBullet, currentText: currentText})

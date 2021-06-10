@@ -143,6 +143,16 @@ var app = new Vue({
     editBulletText({collectionID, bulletID, newText}) {
       this.editBullet({collectionID, bulletID, key: 'text', value: newText})
     },
+    changeBulletStyle({collectionID, bulletID, newStyle}) {
+      this.editBullet({collectionID, bulletID, key: 'style', value: newStyle})
+      const isCollection = (element) => element.id === collectionID
+      const isBullet = (element) => element.id === bulletID
+      const collectionIndex = this.page.collections.findIndex(isCollection)
+      const bulletIndex = this.page.collections[collectionIndex].bullets.findIndex(isBullet)
+      var collection = this.page.collections[collectionIndex]
+      var bullet = collection.bullets[bulletIndex]
+      this.moveTo({page: this.page, bullet: bullet, collection: collection})
+    },
     removeStyle({collectionID, bulletID}) {
       this.editBullet({collectionID, bulletID, key: 'style', value: undefined})
     },
