@@ -28,11 +28,16 @@ Vue.component('bullet', {
       this.$emit('add-bullet', {currentBullet: this.bullet, currentText: currentText})
     },
     removeBullet(event) {
-      if (event.target.innerText.length === 0) {
+      // delete bullet
+      if (event.target.innerText.length === 0 && this.bullet.style === undefined) {
         this.$emit('remove-bullet', this.bullet)
+        // prevent deleting character in next bullet
         this.$nextTick(() => {
             event.preventDefault()
         })
+      // delete style
+      } else if (window.getSelection()['anchorOffset'] === 0 && this.bullet.style) {
+        this.$emit('remove-bullet-style', this.bullet.id)
       }
     }
   }

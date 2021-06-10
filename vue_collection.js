@@ -12,7 +12,8 @@ Vue.component('collection', {
         v-on:move-up="moveUp"
         v-on:move-down="moveDown"
         v-on:add-bullet="addBullet"
-        v-on:remove-bullet="removeBullet"></bullet>
+        v-on:remove-bullet="removeBullet"
+        v-on:remove-bullet-style="removeStyle"></bullet>
     </div>
   `,
   methods: {
@@ -25,12 +26,23 @@ Vue.component('collection', {
       this.$emit('add-bullet', {currentCollection: this.collection, currentBullet: currentBullet, currentText: currentText})
     },
     removeBullet(currentBullet) {
-      this.$emit('remove-bullet', {currentCollection: this.collection, currentBullet: currentBullet})
+      if (this.collection.bullets.length === 1) {
+        this.$emit('remove-collection', this.collection)
+      } else {
+        this.$emit('remove-bullet', {currentCollection: this.collection, currentBullet: currentBullet})
+      }
+    },
+    removeStyle(bulletID) {
+      this.$emit(
+        'remove-bullet-style',
+        {collectionID: this.collection.id, bulletID: bulletID})
     },
     moveUp({currentBullet, event}) {
       var currentPos = currentBullet.position
       var previousBullet = this.collection.bullets.filter(
         bullet => bullet.position === currentPos - 1)[0]
+      // move to previous bullet in same collection or else to bullet of
+      // previous collection or title
       if (previousBullet) {
         this.moveTo({bullet: previousBullet, event: event})
       } else {
@@ -41,6 +53,8 @@ Vue.component('collection', {
       var currentPos = currentBullet.position
       var nextBullet = this.collection.bullets.filter(
         bullet => bullet.position === currentPos + 1)[0]
+      // move to next bullet in same collection or else to bullet of
+      // next collection
       if (nextBullet) {
         this.moveTo({bullet: nextBullet, event: event})
       } else {
@@ -48,6 +62,8 @@ Vue.component('collection', {
       }
     },
     moveTo({bullet, event}) {
+      // prevent click events. Pressing up/down shouldn't move cursor to
+      // previous/next bullet and to the beginning/end
       this.$nextTick(() => {
         if (event) {
           event.preventDefault()

@@ -17,7 +17,9 @@ Vue.component('page', {
           v-on:move-down="moveDown"
           v-on:move-up="moveUp"
           v-on:add-bullet="addBullet"
-          v-on:remove-bullet="removeBullet"></collection>
+          v-on:remove-bullet="removeBullet"
+          v-on:remove-bullet-style="removeStyle"
+          v-on:remove-collection="removeCollection"></collection>
       </div>
     </div>
   `,
@@ -39,6 +41,12 @@ Vue.component('page', {
     removeBullet({currentCollection, currentBullet}) {
       this.$emit('remove-bullet', {currentCollection, currentBullet})
     },
+    removeStyle({collectionID, bulletID}) {
+      this.$emit('remove-bullet-style', {collectionID, bulletID})
+    },
+    removeCollection(currentCollection) {
+      this.$emit('remove-collection', currentCollection)
+    },
     moveDown({currentCollection, event}) {
       var currentPos = currentCollection.position
       var nextCollection = this.collections.filter(
@@ -52,6 +60,7 @@ Vue.component('page', {
       var currentPos = currentCollection.position
       var previousCollection = this.collections.filter(
         collection => collection.position == currentPos - 1)[0]
+      // move up to bullet in prior collection or to page title
       if (previousCollection) {
         var lastPosition = previousCollection.bullets.length - 1
         var nextBullet = previousCollection.bullets[lastPosition]
