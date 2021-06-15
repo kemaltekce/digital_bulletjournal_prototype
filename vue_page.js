@@ -20,7 +20,8 @@ Vue.component('page', {
           v-on:add-bullet="addBullet"
           v-on:remove-bullet="removeBullet"
           v-on:remove-bullet-style="removeStyle"
-          v-on:remove-collection="removeCollection"></collection>
+          v-on:remove-collection="removeCollection"
+          v-on:add-collection="addCollection"></collection>
       </div>
     </div>
   `,
@@ -50,6 +51,9 @@ Vue.component('page', {
     },
     removeCollection(currentCollection) {
       this.$emit('remove-collection', currentCollection)
+    },
+    addCollection({currentCollection, currentBullet, place}) {
+      this.$emit('add-collection', {currentCollection, currentBullet, place})
     },
     moveDown({currentCollection, event}) {
       var currentPos = currentCollection.position

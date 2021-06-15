@@ -21,15 +21,22 @@ Vue.component('bullet', {
       var newText = event.target.innerText
       this.$emit('edit-bullet-text', {id: this.bullet.id, newText: newText})
     },
-    changeStyle(event, bullet, text, style) {
-      var adjusted_text = text.replace("/" + style, '')
+    keepTextWithoutCmd(event, bullet, text, cmd) {
+      var adjusted_text = text.replace(cmd, '')
       this.$emit('edit-bullet-text', {id: bullet.id, newText: adjusted_text})
       event.target.innerText = adjusted_text
+    },
+    changeStyle(event, bullet, text, style) {
+      this.keepTextWithoutCmd(event, bullet, text, "/" + style)
       if (style === 'empty') {
         this.$emit('change-bullet-style', {id: bullet.id, newStyle: undefined})
       } else {
         this.$emit('change-bullet-style', {id: bullet.id, newStyle: style})
       }
+    },
+    addCollection(event, bullet, text, cmd, place) {
+      this.keepTextWithoutCmd(event, bullet, text, cmd)
+      this.$emit('add-collection', {currentBullet: bullet, place: place})
     },
     moveUp(event) {this.$emit('move-up', {currentBullet: this.bullet, event: event})},
     moveDown(event) {this.$emit('move-down', {currentBullet: this.bullet, event: event})},
@@ -49,6 +56,10 @@ Vue.component('bullet', {
         this.changeStyle(event, this.bullet, currentText, "future")
       } else if (currentText.includes("/heading")) {
         this.changeStyle(event, this.bullet, currentText, "heading")
+      } else if (currentText.includes("/newcollup")) {
+        this.addCollection(event, this.bullet, currentText, "/newcollup", 0)
+      } else if (currentText.includes("/newcolldown")) {
+        this.addCollection(event, this.bullet, currentText, "/newcolldown", 1)
       } else {
         this.$emit('add-bullet', {currentBullet: this.bullet, currentText: currentText})
       }

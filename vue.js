@@ -114,7 +114,7 @@ var app = new Vue({
         collections.forEach(function(collection) {
           if (collection.position > currentCollection.position) {collection.position--}
         })
-        this.$set(this.page.collections, 'collections', collections)
+        this.$set(this.page, 'collections', collections)
         // focus on previsous or next collection
         if (deleteCollectionIndex === 0) {
           this.moveTo({page: this.page, bullet: this.page.collections[0].bullets[0], collection: this.page.collections[0]})
@@ -124,6 +124,21 @@ var app = new Vue({
           this.moveTo({page: this.page, bullet: previousCollection.bullets[lastBulletIndex], collection: previousCollection})
         }
       }
+    },
+    addCollection({currentCollection, currentBullet, place}) {
+      var newCollectionPosition = currentCollection.position + place
+      var collections = this.page.collections
+      collections.forEach(function(collection) {
+        if (collection.position >= newCollectionPosition) {collection.position++}
+      })
+
+      var newID = this.uuid()
+      var newCollection = {id: newID, text:"", position: newCollectionPosition, bullets: []}
+      collections.push(newCollection)
+      collections.sort((x, y) => (x.position > y.position) ? 1 : -1)
+
+      this.$set(this.page, 'collections', collections)
+      this.moveTo({page: this.page, bullet: currentBullet, collection: currentCollection})
     },
     editBullet({collectionID, bulletID, key, value}) {
       const isCollection = (element) => element.id === collectionID
