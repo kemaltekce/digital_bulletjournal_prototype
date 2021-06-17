@@ -10,7 +10,8 @@ var app = new Vue({
         note: {content: '<i class="fas fa-minus"></i>', style: 'bullet-style-note'},
         migrate: {content: '<i class="fas fa-chevron-right"></i>', style: 'bullet-style-migrate'},
         future: {content: '<i class="fas fa-chevron-left"></i>', style: 'bullet-style-future'},
-        heading: {content: '', style: undefined}
+        heading: {content: '', style: undefined},
+        tab: {content: '', style: 'bullet-style-tab'}
       },
       pages: [
         {
@@ -22,7 +23,13 @@ var app = new Vue({
               position: 0,
               bullets: [
                 {id: this.uuid(), text: 'I am a note.', position: 0, style: 'todo'},
-                {id: this.uuid(), text: 'I am also a note.', position: 1, style: 'done'}
+                {id: this.uuid(), text: 'I am also a note.', position: 1, style: 'done'},
+                {id: this.uuid(), text: 'I am also a note.', position: 2, style: 'tab'},
+                {id: this.uuid(), text: 'I am also a note.', position: 3, style: 'done'},
+                {id: this.uuid(), text: 'I am also a note.', position: 4, style: undefined},
+                {id: this.uuid(), text: 'I am also a note.', position: 5, style: 'heading'},
+                {id: this.uuid(), text: 'I am also a note.', position: 6, style: 'todo'},
+                {id: this.uuid(), text: 'I am also a note.', position: 7, style: 'tab'},
               ]
             },
             {
@@ -65,9 +72,11 @@ var app = new Vue({
   },
   mounted() {
     this.focusFirstBullet()
+    this.setBulletTabColor()
   },
   updated() {
     this.addDefaultBullet()
+    this.setBulletTabColor()
   },
   methods: {
     uuid() {
@@ -78,6 +87,17 @@ var app = new Vue({
       var collectionRefs = pageRef['collection-' + this.page.collections[0].id][0].$refs
       collectionRefs['bullet-' + this.page.collections[0].bullets[0].id][0].$el.querySelector('div.bullet-text').focus()
       this.setEndOfContenteditable(collectionRefs['bullet-' + this.page.collections[0].bullets[0].id][0].$el.querySelector('div.bullet-text'))
+    },
+    setBulletTabColor() {
+      // first remove all inline styles
+      document.querySelectorAll('.bullet').forEach(function(div) {
+        div.querySelector('.bullet-text').style.color = ''
+      })
+      // add inline style for tab bullets based on sibiling style
+      document.querySelectorAll('#tab').forEach(function(div) {
+        var previousColor = window.getComputedStyle(div.previousSibling.querySelector('.bullet-text')).color
+        div.querySelector('.bullet-text').style.color = previousColor
+      })
     },
     editPageTitle(newTitle) {
       this.$set(this.page, 'title', newTitle)

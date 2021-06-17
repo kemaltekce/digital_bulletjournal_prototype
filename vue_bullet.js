@@ -1,8 +1,8 @@
 Vue.component('bullet', {
   props: ['bullet', 'styles'],
   template: `
-    <div class="bullet">
-      <div class="bullet-style" v-if="bullet.style" :id="bullet.style">
+    <div class="bullet" :id="bullet.style">
+      <div class="bullet-style" v-if="bullet.style">
         <span v-html="styles[bullet.style].content" :class="styles[bullet.style].style"></span>
       </div>
       <div
@@ -13,7 +13,9 @@ Vue.component('bullet', {
         @keydown.up="moveUp"
         @keydown.down="moveDown"
         @keydown.enter.prevent="endEdit"
-        @keydown.delete="removeBullet"></div>
+        @keydown.delete="removeBullet"
+        @keydown.space="addNewLine"
+        @keydown.tab.prevent="addNewLine"></div>
     </div>
   `,
   methods: {
@@ -76,6 +78,19 @@ Vue.component('bullet', {
       } else if (window.getSelection()['anchorOffset'] === 0 && this.bullet.style) {
         this.$emit('remove-bullet-style', this.bullet.id)
       }
-    }
+    },
+    addNewLine(event) {
+      var currentText = event.target.innerText
+      if (this.bullet.style === undefined) {
+        if (event.code === 'Space') {
+          if (/\s{2}/.test(currentText)) {
+            this.changeStyle(event, this.bullet, currentText, "tab")
+            this.keepTextWithoutCmd(event, this.bullet, currentText, /\s{2}/)
+          }
+        } else if (event.code === 'Tab') {
+          this.changeStyle(event, this.bullet, currentText, "tab")
+        }
+      }
+    },
   }
 })

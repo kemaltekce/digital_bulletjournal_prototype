@@ -107,7 +107,7 @@ body {
   color: rgb(185, 185, 185);
 }
 
-#done + div {
+#done > .bullet-text, #migrate > .bullet-text, #future > .bullet-text {
   color: rgb(185, 185, 185);
 }
 
@@ -119,24 +119,26 @@ body {
 .bullet-style-migrate {
   font-size: 14px;
   transform: translateY(10%);
+  color: rgb(185, 185, 185);
 }
 
 .bullet-style-future {
   font-size: 14px;
   transform: translateY(10%);
+  color: rgb(185, 185, 185);
 }
 
-#heading {
+#heading > .bullet-style {
   width: 0px;
 }
 
-#heading + div {
+#heading > .bullet-text {
   font-size: 36px;
   font-weight: 500;
   padding: 30px 4px 10px;
 }
 
-.collection > .bullet:first-child > #heading + div {
+.collection > #heading:first-child > .bullet-text {
   padding-top: 0px
 }
 
