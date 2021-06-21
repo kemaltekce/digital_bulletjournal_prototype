@@ -78,9 +78,10 @@ Vue.component('collection', {
         if (event) {
           event.preventDefault()
         }
+        var offset = window.getSelection()['anchorOffset']
         this.$refs['bullet-' + bullet.id][0].$el.querySelector('div.bullet-text').focus()
-        this.$parent.setEndOfContenteditable(
-          this.$refs['bullet-' + bullet.id][0].$el.querySelector('div.bullet-text'))
+        this.$root.setEndOfContenteditable(
+          this.$refs['bullet-' + bullet.id][0].$el.querySelector('div.bullet-text'), offset)
       })
     },
   },

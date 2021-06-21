@@ -26,7 +26,20 @@ Vue.component('bullet', {
     keepTextWithoutCmd(event, bullet, text, cmd) {
       var adjusted_text = text.replace(cmd, '')
       this.$emit('edit-bullet-text', {id: bullet.id, newText: adjusted_text})
+      var offset
+      if (cmd === '/tab') {
+        // tab is not an actual text we removed
+        offset = window.getSelection()['anchorOffset']
+      } else if (cmd instanceof RegExp) {
+        // only regex we use so far is the double empty space cmd. adjust
+        // offset by removing two empty spaces
+        offset = window.getSelection()['anchorOffset'] - 2
+      } else {
+        // adjust offset to match offset without cmd
+        offset = window.getSelection()['anchorOffset'] - cmd.length
+      }
       event.target.innerText = adjusted_text
+      this.$root.setEndOfContenteditable(this.$el.querySelector('.bullet-text'), offset)
     },
     changeStyle(event, bullet, text, style) {
       this.keepTextWithoutCmd(event, bullet, text, "/" + style)
@@ -84,8 +97,12 @@ Vue.component('bullet', {
       if (this.bullet.style === undefined) {
         if (event.code === 'Space') {
           if (/\s{2}/.test(currentText)) {
+            // change to tab style
             this.changeStyle(event, this.bullet, currentText, "tab")
+            // changing to tab style will only remove /tab cmd. We stil have to
+            // remove the empty spaces we used as cmd.
             this.keepTextWithoutCmd(event, this.bullet, currentText, /\s{2}/)
+            event.preventDefault()
           }
         } else if (event.code === 'Tab') {
           this.changeStyle(event, this.bullet, currentText, "tab")

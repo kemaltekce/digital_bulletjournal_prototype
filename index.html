@@ -9,7 +9,7 @@
 </head>
 <body>
   <div id="app">
-    <div class="navigation">
+    <div class="navigation" v-if=displayNav>
       <div
         class="button"
         v-for="navpage in pages"
@@ -31,7 +31,8 @@
       v-on:remove-bullet="removeBullet"
       v-on:remove-bullet-style="removeStyle"
       v-on:remove-collection="removeCollection"
-      v-on:add-collection="addCollection"></page>
+      v-on:add-collection="addCollection"
+      v-on:change-pagenav-visibility="changePageNavVisibility"></page>
   </div>
 </body>
 

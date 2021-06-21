@@ -13,6 +13,7 @@ var app = new Vue({
         heading: {content: '', style: undefined},
         tab: {content: '', style: 'bullet-style-tab'}
       },
+      displayNav: true,
       pages: [
         {
           id: this.uuid(),
@@ -86,7 +87,8 @@ var app = new Vue({
       var pageRef = this.$refs['page-' + this.page.id].$refs
       var collectionRefs = pageRef['collection-' + this.page.collections[0].id][0].$refs
       collectionRefs['bullet-' + this.page.collections[0].bullets[0].id][0].$el.querySelector('div.bullet-text').focus()
-      this.setEndOfContenteditable(collectionRefs['bullet-' + this.page.collections[0].bullets[0].id][0].$el.querySelector('div.bullet-text'))
+      var firstBullet = collectionRefs['bullet-' + this.page.collections[0].bullets[0].id][0].$el.querySelector('div.bullet-text')
+      this.setEndOfContenteditable(firstBullet, firstBullet.innerText.length)
     },
     setBulletTabColor() {
       // first remove all inline styles
@@ -118,12 +120,14 @@ var app = new Vue({
             id: this.uuid(),
             bullets: [
               {id: this.uuid(), text: '', position: 0, style: undefined},
-            ]
+            ],
+            position: 0,
           }
         ],
       }
       this.pages.push(newPage)
     },
+    changePageNavVisibility() {this.displayNav = !this.displayNav},
     removeCollection(currentCollection) {
       if (this.page.collections.length !== 1) {
         var collections = this.page.collections
@@ -158,7 +162,9 @@ var app = new Vue({
       collections.sort((x, y) => (x.position > y.position) ? 1 : -1)
 
       this.$set(this.page, 'collections', collections)
-      this.moveTo({page: this.page, bullet: currentBullet, collection: currentCollection})
+      if (currentBullet !== undefined) {
+        this.moveTo({page: this.page, bullet: currentBullet, collection: currentCollection})
+      }
     },
     editBullet({collectionID, bulletID, key, value}) {
       const isCollection = (element) => element.id === collectionID
@@ -233,19 +239,19 @@ var app = new Vue({
       // collection. Wait for the next tick to create a new empty bullet and
       // move to that new bullet.
       if (previousBullet) {
-        this.moveTo({page: this.page, bullet: previousBullet, collection: currentCollection})
+        this.moveTo({page: this.page, bullet: previousBullet, collection: currentCollection, offset: previousBullet.text.length})
       } else {
         this.$nextTick(() => {
           this.moveTo({page: this.page, bullet: this.page.collections[collectionIndex].bullets[0], collection: currentCollection})
         })
       }
     },
-    moveTo({page, bullet, collection}) {
+    moveTo({page, bullet, collection, offset=window.getSelection()['anchorOffset']}) {
       this.$nextTick(() => {
         var collectionRefs = this.$refs['page-' + page.id].$refs['collection-' + collection.id][0].$refs
         collectionRefs['bullet-' + bullet.id][0].$el.querySelector('div.bullet-text').focus()
         this.setEndOfContenteditable(
-          collectionRefs['bullet-' + bullet.id][0].$el.querySelector('div.bullet-text'))
+          collectionRefs['bullet-' + bullet.id][0].$el.querySelector('div.bullet-text'), offset)
       })
     },
     getBullets(collection) {
@@ -265,12 +271,20 @@ var app = new Vue({
         }
       })
     },
-    setEndOfContenteditable(contentEditableElement) {
+    setEndOfContenteditable(contentEditableElement, offset) {
       var range,selection;
       if(document.createRange)
       {
           range = document.createRange();
-          range.selectNodeContents(contentEditableElement);
+          if ((contentEditableElement.childNodes[0] === undefined) || (offset === undefined)) {
+            // use this if bullet is empty. If bullet is empty childNotes do
+            // not exist.
+            range.selectNodeContents(contentEditableElement);
+          } else if (offset > contentEditableElement.innerText.length) {
+            range.setStart(contentEditableElement.childNodes[0], contentEditableElement.innerText.length)
+          }else {
+            range.setStart(contentEditableElement.childNodes[0], offset)
+          }
           range.collapse(false);
           selection = window.getSelection();
           selection.removeAllRanges();
@@ -283,6 +297,6 @@ var app = new Vue({
           range.collapse(false);
           range.select();
       }
-    }
+    },
   }
 })

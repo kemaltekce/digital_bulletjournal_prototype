@@ -37,6 +37,7 @@ body {
   background-color: #fff;
   font-weight: 500;
   color: #101010;
+  border-left: 3px solid #dc3f40;
 }
 
 .plus {
@@ -52,12 +53,45 @@ body {
 
 .pagetitle {
   font-size: 48px;
-  margin: 10px 0px;
-  /* position: relative;
-  overflow: hidden; */
+  margin: 30px 0px 0px 0px;
+  position: relative;
+  overflow: hidden;
 }
 
-/* .pagetitle::after {
+.page-header {
+  display: flex;
+  flex-direction: row;
+  flex: 1 1 0px;
+}
+
+.header-button {
+  box-shadow: 0px 0px 7px rgb(226, 226, 226);
+  background-color: #fff;
+  margin: 4px 0px;
+  border-radius: 5px;
+  padding: 4px;
+  font-size: 14px;
+  color: #555555;
+  min-width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-button span {
+  padding: 0px 10px;
+}
+
+.add-collection-button {
+  margin-left: auto;
+  margin-right: 6px;
+}
+
+.as-sidebar-button {
+  margin-left: 6px;
+}
+
+.pagetitle::after {
   content: "";
   display: inline-block;
   position: absolute;
@@ -66,7 +100,7 @@ body {
   width: 100%;
   margin-left: 20px;
   border-top: 3px solid #101010;
-} */
+}
 
 /* collection styles */
 
