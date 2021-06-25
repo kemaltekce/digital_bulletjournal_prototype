@@ -1,8 +1,9 @@
 Vue.component('page', {
-  props: ['title', 'collections', 'styles'],
+  props: ['title', 'collections', 'styles', 'navarrow'],
   template: `
     <div class="page">
       <pageheader
+        :arrow="navarrow"
         v-on:change-pagenav-visibility="changePageNavVisibility"
         v-on:add-collection="addCollection"></pageheader>
       <pagetitle
@@ -25,7 +26,8 @@ Vue.component('page', {
           v-on:remove-bullet-style="removeStyle"
           v-on:remove-collection="removeCollection"
           v-on:add-collection="addCollection"
-          v-on:change-pagenav-visibility="changePageNavVisibility"></collection>
+          v-on:change-pagenav-visibility="changePageNavVisibility"
+          v-on:iterate-page="iteratePage"></collection>
       </div>
     </div>
   `,
@@ -34,6 +36,7 @@ Vue.component('page', {
     editPageTitle(newTitle) {
       this.$emit('edit-page-title', newTitle)
     },
+    iteratePage() {this.$emit('iterate-page')},
     moveToFirstBullet(event) {
       var nextCollection = this.collections[0]
       var nextBullet = nextCollection.bullets[0]
@@ -148,6 +151,7 @@ Vue.component('pagetitle', {
 
 
 Vue.component('pageheader', {
+  props: ['arrow'],
   template: `
     <div class="page-header">
       <div
@@ -158,19 +162,8 @@ Vue.component('pageheader', {
       <div class="header-button as-sidebar-button"><span>as sidebar</span></div>
     </div>
   `,
-  data: function() {
-    return {
-    arrow: 'fa-angle-double-left',
-  }},
   methods: {
-    changePageNavVisibility() {
-      this.$emit('change-pagenav-visibility')
-      if (this.$root.displayNav) {
-        this.arrow = 'fa-angle-double-left'
-      } else {
-        this.arrow = 'fa-angle-double-right'
-      }
-    },
+    changePageNavVisibility() {this.$emit('change-pagenav-visibility')},
     addCollection() {this.$emit('add-collection', {currenCollection: undefined, currentBullet: undefined, place: 0})}
   },
 })

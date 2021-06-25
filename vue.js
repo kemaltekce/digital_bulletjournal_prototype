@@ -14,6 +14,7 @@ var app = new Vue({
         tab: {content: '', style: 'bullet-style-tab'}
       },
       displayNav: true,
+      navarrow: 'fa-angle-double-left',
       pages: [
         {
           id: this.uuid(),
@@ -111,6 +112,15 @@ var app = new Vue({
         this.focusFirstBullet()
       })
     },
+    iteratePage(id) {
+      const isID = (element) => element.id === id
+      var nextIndex = this.pages.findIndex(isID) + 1
+      if (nextIndex >= this.pages.length) {
+        nextIndex = 0
+      }
+      var nextPageID = this.pages[nextIndex].id
+      this.loadPage(nextPageID)
+    },
     addNewPage() {
       const newPage = {
         id: this.uuid(),
@@ -127,7 +137,14 @@ var app = new Vue({
       }
       this.pages.push(newPage)
     },
-    changePageNavVisibility() {this.displayNav = !this.displayNav},
+    changePageNavVisibility() {
+      this.displayNav = !this.displayNav
+      if (this.displayNav) {
+        this.navarrow = 'fa-angle-double-left'
+      } else {
+        this.navarrow = 'fa-angle-double-right'
+      }
+    },
     removeCollection(currentCollection) {
       if (this.page.collections.length !== 1) {
         var collections = this.page.collections

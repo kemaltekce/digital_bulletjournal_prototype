@@ -15,10 +15,12 @@ Vue.component('bullet', {
         @keydown.enter.prevent="endEdit"
         @keydown.delete="removeBullet"
         @keydown.space="addNewLine"
-        @keydown.tab.prevent="addNewLine"></div>
+        @keydown.tab.prevent="addNewLine"
+        @keydown.alt.188.capture.prevent.stop="iteratePage"></div>
     </div>
   `,
   methods: {
+    iteratePage() {this.$emit('iterate-page')},
     edit(event) {
       var newText = event.target.innerText
       this.$emit('edit-bullet-text', {id: this.bullet.id, newText: newText})
@@ -75,6 +77,9 @@ Vue.component('bullet', {
         this.addCollection(event, this.bullet, currentText, "/newcollup", 0)
       } else if (currentText.includes("/newcolldown")) {
         this.addCollection(event, this.bullet, currentText, "/newcolldown", 1)
+      } else if (currentText.includes("/nav")) {
+        this.keepTextWithoutCmd(event, this.bullet, currentText, "/nav")
+        this.$emit('change-pagenav-visibility')
       } else {
         this.$emit('add-bullet', {currentBullet: this.bullet, currentText: currentText})
       }

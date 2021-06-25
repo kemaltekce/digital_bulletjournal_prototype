@@ -91,7 +91,7 @@ body {
   margin-left: 6px;
 }
 
-.pagetitle::after {
+/* .pagetitle::after {
   content: "";
   display: inline-block;
   position: absolute;
@@ -100,7 +100,7 @@ body {
   width: 100%;
   margin-left: 20px;
   border-top: 3px solid #101010;
-}
+} */
 
 /* collection styles */
 

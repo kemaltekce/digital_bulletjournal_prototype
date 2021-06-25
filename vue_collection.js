@@ -15,10 +15,14 @@ Vue.component('collection', {
         v-on:add-bullet="addBullet"
         v-on:remove-bullet="removeBullet"
         v-on:remove-bullet-style="removeStyle"
-        v-on:add-collection="addCollection"></bullet>
+        v-on:add-collection="addCollection"
+        v-on:iterate-page="iteratePage"
+        v-on:change-pagenav-visibility="changePageNavVisibility"></bullet>
     </div>
   `,
   methods: {
+    iteratePage() {this.$emit('iterate-page')},
+    changePageNavVisibility() {this.$emit('change-pagenav-visibility')},
     editBulletText({id, newText}) {
       this.$emit(
         'edit-bullet-text',

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" spellcheck="false">
 <head>
   <title>Document</title>
   <script src="https://unpkg.com/vue"></script>
@@ -23,6 +23,7 @@
     </div>
     <page
       :title="page.title" :collections="page.collections" :styles="styles"
+      :navarrow="navarrow"
       :key="page.id" :ref="'page-' + page.id"
       v-on:edit-page-title="editPageTitle"
       v-on:edit-bullet-text="editBulletText"
@@ -32,7 +33,8 @@
       v-on:remove-bullet-style="removeStyle"
       v-on:remove-collection="removeCollection"
       v-on:add-collection="addCollection"
-      v-on:change-pagenav-visibility="changePageNavVisibility"></page>
+      v-on:change-pagenav-visibility="changePageNavVisibility"
+      v-on:iterate-page="iteratePage(page.id)"></page>
   </div>
 </body>
 
