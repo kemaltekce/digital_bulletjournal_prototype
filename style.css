@@ -87,8 +87,22 @@ body {
   margin-right: 6px;
 }
 
-.as-sidebar-button {
+.sidebar-button {
   margin-left: 6px;
+}
+
+.sidepage {
+  height: 100vh;
+  position: fixed;
+  overflow-y: scroll;
+  right: 0;
+}
+
+.sidepage:after {
+  content: "";
+  display: block;
+  height: 50px;
+  width: 100%;
 }
 
 /* .pagetitle::after {

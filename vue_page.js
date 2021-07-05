@@ -1,11 +1,13 @@
 Vue.component('page', {
-  props: ['title', 'collections', 'styles', 'navarrow'],
+  props: ['title', 'collections', 'styles', 'navarrow', 'pagetype'],
   template: `
     <div class="page">
       <pageheader
-        :arrow="navarrow"
+        :arrow="navarrow" :pagetype="pagetype"
         v-on:change-pagenav-visibility="changePageNavVisibility"
-        v-on:add-collection="addCollection"></pageheader>
+        v-on:add-collection="addCollection"
+        v-on:as-sidebar="asSidebar"
+        v-on:close-sidebar="closeSidebar"></pageheader>
       <pagetitle
         :title="title"
         v-on:edit-page-title="editPageTitle"
@@ -34,31 +36,33 @@ Vue.component('page', {
   methods: {
     changePageNavVisibility() {this.$emit('change-pagenav-visibility')},
     editPageTitle(newTitle) {
-      this.$emit('edit-page-title', newTitle)
+      this.$emit('edit-page-title', {pagetype: this.pagetype, newTitle})
     },
     iteratePage() {this.$emit('iterate-page')},
+    asSidebar() {this.$emit('as-sidebar')},
+    closeSidebar() {this.$emit('close-sidebar')},
     moveToFirstBullet(event) {
       var nextCollection = this.collections[0]
       var nextBullet = nextCollection.bullets[0]
       this.moveTo({bullet: nextBullet, collection: nextCollection, event: event})
     },
     editBulletText({collectionID, bulletID, newText}) {
-      this.$emit('edit-bullet-text', {collectionID, bulletID, newText})
+      this.$emit('edit-bullet-text', {pagetype: this.pagetype, collectionID, bulletID, newText})
     },
     changeBulletStyle({collectionID, bulletID, newStyle}) {
-      this.$emit('change-bullet-style', {collectionID, bulletID, newStyle})
+      this.$emit('change-bullet-style', {pagetype: this.pagetype, collectionID, bulletID, newStyle})
     },
     addBullet({currentCollection, currentBullet, currentText}) {
-      this.$emit('add-bullet', {currentCollection, currentBullet, currentText})
+      this.$emit('add-bullet', {pagetype: this.pagetype, currentCollection, currentBullet, currentText})
     },
     removeBullet({currentCollection, currentBullet}) {
-      this.$emit('remove-bullet', {currentCollection, currentBullet})
+      this.$emit('remove-bullet', {pagetype: this.pagetype, currentCollection, currentBullet})
     },
     removeStyle({collectionID, bulletID}) {
-      this.$emit('remove-bullet-style', {collectionID, bulletID})
+      this.$emit('remove-bullet-style', {pagetype: this.pagetype, collectionID, bulletID})
     },
     removeCollection(currentCollection) {
-      this.$emit('remove-collection', currentCollection)
+      this.$emit('remove-collection', {pagetype: this.pagetype, currentCollection})
     },
     addCollection({currentCollection, currentBullet, place}) {
       // if add collection button is used to add collection we don't have a
@@ -66,7 +70,7 @@ Vue.component('page', {
       if (currentCollection === undefined) {
         currentCollection = this.collections[0]
       }
-      this.$emit('add-collection', {currentCollection, currentBullet, place})
+      this.$emit('add-collection', {pagetype: this.pagetype, currentCollection, currentBullet, place})
     },
     moveDown({currentCollection, event}) {
       var currentPos = currentCollection.position
@@ -151,7 +155,7 @@ Vue.component('pagetitle', {
 
 
 Vue.component('pageheader', {
-  props: ['arrow'],
+  props: ['arrow', 'pagetype'],
   template: `
     <div class="page-header">
       <div
@@ -159,11 +163,20 @@ Vue.component('pageheader', {
         @click="changePageNavVisibility"><i class="fas" v-bind:class="arrow"></i></div>
       <div class="header-button add-collection-button"
         @click="addCollection"><i class="fas fa-plus"></i></div>
-      <div class="header-button as-sidebar-button"><span>as sidebar</span></div>
+      <div
+        v-if="pagetype === 'sidepage'"
+        class="header-button sidebar-button"
+        @click="closeSidebar"><span>close sidebar</span></div>
+      <div
+        v-else
+        class="header-button sidebar-button"
+        @click="asSidebar"><span>as sidebar</span></div>
     </div>
   `,
   methods: {
     changePageNavVisibility() {this.$emit('change-pagenav-visibility')},
-    addCollection() {this.$emit('add-collection', {currenCollection: undefined, currentBullet: undefined, place: 0})}
+    addCollection() {this.$emit('add-collection', {currenCollection: undefined, currentBullet: undefined, place: 0})},
+    asSidebar() {this.$emit('as-sidebar')},
+    closeSidebar() {this.$emit('close-sidebar')}
   },
 })

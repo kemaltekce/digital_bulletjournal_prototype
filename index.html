@@ -23,7 +23,7 @@
     </div>
     <page
       :title="page.title" :collections="page.collections" :styles="styles"
-      :navarrow="navarrow"
+      :navarrow="navarrow" :pagetype="'page'"
       :key="page.id" :ref="'page-' + page.id"
       v-on:edit-page-title="editPageTitle"
       v-on:edit-bullet-text="editBulletText"
@@ -34,7 +34,28 @@
       v-on:remove-collection="removeCollection"
       v-on:add-collection="addCollection"
       v-on:change-pagenav-visibility="changePageNavVisibility"
-      v-on:iterate-page="iteratePage(page.id)"></page>
+      v-on:iterate-page="iteratePage(page.id)"
+      v-on:as-sidebar="asSidebar"></page>
+    <div style="flex: 1; margin: 0px 20px" v-if=sidepage.id>
+      <page
+        v-if=sidepage.id
+        class="sidepage"
+        :style="{ width: sidepagewidth + 'px'}"
+        :title="sidepage.title" :collections="sidepage.collections" :styles="styles"
+        :navarrow="navarrow" :pagetype="'sidepage'"
+        :ref="'sidepage-' + sidepage.id"
+        v-on:edit-page-title="editPageTitle"
+        v-on:edit-bullet-text="editBulletText"
+        v-on:change-bullet-style="changeBulletStyle"
+        v-on:add-bullet="addBullet"
+        v-on:remove-bullet="removeBullet"
+        v-on:remove-bullet-style="removeStyle"
+        v-on:remove-collection="removeCollection"
+        v-on:add-collection="addCollection"
+        v-on:change-pagenav-visibility="changePageNavVisibility"
+        v-on:iterate-page="iteratePage(page.id)"
+        v-on:close-sidebar="closeSidebar"></page>
+    </div>
   </div>
 </body>
 
