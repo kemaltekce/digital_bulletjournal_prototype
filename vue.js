@@ -99,7 +99,6 @@ var app = new Vue({
   },
   methods: {
     swipeNavOrSidepage(event) {
-      console.log(event)
       if (event === 'right' && this.displayNav === false && this.sidepageMobileActive === false) {
         this.changePageNavVisibility()
       } else if (event === 'left' && this.displayNav === true) {
@@ -273,7 +272,6 @@ var app = new Vue({
       const bulletIndex = this[pagetype].collections[collectionIndex].bullets.findIndex(isBullet)
       var collection = this[pagetype].collections[collectionIndex]
       var bullet = collection.bullets[bulletIndex]
-      console.log(this[pagetype])
       this.moveTo({page: pagetype, bullet: bullet, collection: collection})
     },
     removeStyle({pagetype, collectionID, bulletID}) {

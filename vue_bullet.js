@@ -2,7 +2,7 @@ Vue.component('bullet', {
   props: ['bullet', 'styles'],
   template: `
     <div class="bullet" :id="bullet.style">
-      <div class="bullet-style" v-if="bullet.style">
+      <div class="bullet-style" v-if="bullet.style" @click="iterateStyle">
         <span v-html="styles[bullet.style].content" :class="styles[bullet.style].style"></span>
       </div>
       <div
@@ -50,6 +50,15 @@ Vue.component('bullet', {
       } else {
         this.$emit('change-bullet-style', {id: bullet.id, newStyle: style})
       }
+    },
+    iterateStyle(event) {
+      const iterateableStyles = ['todo', 'done', 'migrate', 'future', 'note'];
+      var isStyle = (element) => element === this.bullet.style
+      var currentStyleIndex = iterateableStyles.findIndex(isStyle)
+      if (currentStyleIndex === iterateableStyles.length - 1) {
+        currentStyleIndex = -1
+      }
+      this.$emit('change-bullet-style', {id: this.bullet.id, newStyle: iterateableStyles[currentStyleIndex + 1]})
     },
     addCollection(event, bullet, text, cmd, place) {
       this.keepTextWithoutCmd(event, bullet, text, cmd)

@@ -188,18 +188,19 @@ body {
 .bullet-style {
   display: flex;
   align-items: center;
+  align-self: normal;
   justify-content: center;
   width: 24px;
 }
 
 .bullet-style-todo {
   font-size: 2px;
-  transform: translateY(95%);
+  /* transform: translateY(95%); */
 }
 
 .bullet-style-done {
   font-size: 14px;
-  transform: translateY(15%);
+  /* transform: translateY(15%); */
   color: rgb(185, 185, 185);
 }
 
@@ -209,18 +210,18 @@ body {
 
 .bullet-style-note {
   font-size: 10px;
-  transform: translateY(40%);
+  /* transform: translateY(40%); */
 }
 
 .bullet-style-migrate {
   font-size: 14px;
-  transform: translateY(10%);
+  /* transform: translateY(10%); */
   color: rgb(185, 185, 185);
 }
 
 .bullet-style-future {
   font-size: 14px;
-  transform: translateY(10%);
+  /* transform: translateY(10%); */
   color: rgb(185, 185, 185);
 }
 
