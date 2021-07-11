@@ -159,6 +159,7 @@ Vue.component('pageheader', {
   template: `
     <div class="page-header">
       <div
+        v-if="pagetype !== 'sidepage'"
         class="header-button"
         @click="changePageNavVisibility"><i class="fas" v-bind:class="arrow"></i></div>
       <div class="header-button add-collection-button"

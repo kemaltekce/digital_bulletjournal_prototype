@@ -2,9 +2,11 @@ var app = new Vue({
   el: '#app',
   data: function() {
     return {
+      mobileVersion: false,
       page: {},
       sidepage: {},
       sidepagewidth: 0,
+      sidepageMobileActive: false,
       styles: {
         todo: {content: '<i class="fas fa-circle"></i>', style: 'bullet-style-todo'},
         done: {content: '<i class="fas fa-times"></i>', style: 'bullet-style-done'},
@@ -77,6 +79,7 @@ var app = new Vue({
       this.addDefaultBullet(this.sidepage)
     }
     window.addEventListener("resize", this.adjustPageWidth);
+    this.getNavArrow()
   },
   destroyed() {
     window.removeEventListener("resize", this.adjustPageWidth);
@@ -95,14 +98,39 @@ var app = new Vue({
     this.adjustPageWidth()
   },
   methods: {
+    swipeNavOrSidepage(event) {
+      console.log(event)
+      if (event === 'right' && this.displayNav === false && this.sidepageMobileActive === false) {
+        this.changePageNavVisibility()
+      } else if (event === 'left' && this.displayNav === true) {
+        this.changePageNavVisibility()
+      } else if (event === 'left' && this.displayNav === false && this.sidepage.id !== undefined) {
+        this.sidepageMobileActive = true
+      } else if (event === 'right' && this.displayNav === false && this.sidepageMobileActive === true) {
+        this.sidepageMobileActive = false
+      }
+    },
     uuid() {
       return Math.random().toString(16).slice(2)},
     adjustPageWidth() {
+      // adjust size of page and sidepage
       if (this.sidepage.id !== undefined) {
         this.sidepagewidth = document.querySelector('.page').offsetWidth
       } else (
         this.sidepagewidth = document.querySelector('.page').offsetWidth / 2
       )
+      // check if mobile version on or off
+      var mobileVersionState = this.mobileVersion
+      if (window.outerWidth < 700) {
+        if (mobileVersionState === false && this.displayNav === true) {
+          this.changePageNavVisibility()
+        }
+        this.$nextTick(() => {
+          this.mobileVersion = true
+        })
+      } else {
+        this.mobileVersion = false
+      }
     },
     focusFirstBullet() {
       // after loading page. Be ready to edit text. No extra click needed.
@@ -163,20 +191,22 @@ var app = new Vue({
     },
     closeSidebar() {
       this.sidepage = {}
+      if (this.mobileVersion === true) {
+        this.sidepageMobileActive = false
+      }
     },
-    changePageNavVisibility() {
-      this.displayNav = !this.displayNav
+    getNavArrow() {
       if (this.displayNav) {
         this.navarrow = 'fa-angle-double-left'
       } else {
         this.navarrow = 'fa-angle-double-right'
       }
+    },
+    changePageNavVisibility() {
+      this.displayNav = !this.displayNav
+      this.getNavArrow()
       this.$nextTick(() => {
-        if (this.sidepage.id !== undefined) {
-          this.sidepagewidth = document.querySelector('.page').offsetWidth
-        } else (
-          this.sidepagewidth = document.querySelector('.page').offsetWidth / 2
-        )
+        this.adjustPageWidth()
       })
     },
     removeCollection({pagetype, currentCollection}) {
