@@ -14,8 +14,8 @@ Vue.component('bullet', {
         @keydown.down="moveDown"
         @keydown.enter.prevent="endEdit"
         @keydown.delete="removeBullet"
-        @keydown.space="addNewLine"
-        @keydown.tab.prevent="addNewLine"
+        @keyup.space="executeShortCmd"
+        @keydown.tab.prevent="executeShortCmd"
         @keydown.alt.188.capture.prevent.stop="iteratePage"></div>
     </div>
   `,
@@ -26,15 +26,21 @@ Vue.component('bullet', {
       this.$emit('edit-bullet-text', {id: this.bullet.id, newText: newText})
     },
     keepTextWithoutCmd(event, bullet, text, cmd) {
-      var adjusted_text = text.replace(cmd, '')
+      // real commands start with a '/' and need to be removed from the text
+      if (/\//.test(cmd)) {
+        var adjusted_text = text.replace(cmd, '')
+      // the rest are short cmd which are only allowed at the beginning
+      // and are two elements long
+      } else {
+        var adjusted_text = text.splice(2)
+      }
       this.$emit('edit-bullet-text', {id: bullet.id, newText: adjusted_text})
       var offset
       if (cmd === '/tab') {
         // tab is not an actual text we removed
         offset = window.getSelection()['anchorOffset']
       } else if (cmd instanceof RegExp) {
-        // only regex we use so far is the double empty space cmd. adjust
-        // offset by removing two empty spaces
+        // regex is used for short cmd. The short cmd are all 2 elements long
         offset = window.getSelection()['anchorOffset'] - 2
       } else {
         // adjust offset to match offset without cmd
@@ -80,8 +86,10 @@ Vue.component('bullet', {
         this.changeStyle(event, this.bullet, currentText, "migrate")
       } else if (currentText.includes("/future")) {
         this.changeStyle(event, this.bullet, currentText, "future")
-      } else if (currentText.includes("/heading")) {
-        this.changeStyle(event, this.bullet, currentText, "heading")
+      } else if (currentText.includes("/h1")) {
+        this.changeStyle(event, this.bullet, currentText, "h1")
+      } else if (currentText.includes("/h2")) {
+        this.changeStyle(event, this.bullet, currentText, "h2")
       } else if (currentText.includes("/newcollup")) {
         this.addCollection(event, this.bullet, currentText, "/newcollup", 0)
       } else if (currentText.includes("/newcolldown")) {
@@ -106,21 +114,32 @@ Vue.component('bullet', {
         this.$emit('remove-bullet-style', this.bullet.id)
       }
     },
-    addNewLine(event) {
+    executeShortCmd(event) {
       var currentText = event.target.innerText
-      if (this.bullet.style === undefined) {
-        if (event.code === 'Space') {
-          if (/\s{2}/.test(currentText)) {
-            // change to tab style
-            this.changeStyle(event, this.bullet, currentText, "tab")
-            // changing to tab style will only remove /tab cmd. We stil have to
-            // remove the empty spaces we used as cmd.
-            this.keepTextWithoutCmd(event, this.bullet, currentText, /\s{2}/)
-            event.preventDefault()
-          }
-        } else if (event.code === 'Tab') {
-          this.changeStyle(event, this.bullet, currentText, "tab")
+      var shortCmd = currentText.slice(0, 2)
+      if (event.code === 'Space' && window.getSelection()['anchorOffset'] === 2) {
+        if (/\s{2}/.test(shortCmd)) {
+          this.keepTextWithoutCmd(event, this.bullet, currentText, /\s{2}/)
+          this.$emit('change-bullet-style', {id: this.bullet.id, newStyle: 'tab'})
+        } else if (/\.\s{1}/.test(shortCmd)) {
+          this.keepTextWithoutCmd(event, this.bullet, currentText, /\.\s{1}/)
+          this.$emit('change-bullet-style', {id: this.bullet.id, newStyle: 'todo'})
+        } else if (/x\s{1}/.test(shortCmd)) {
+          this.keepTextWithoutCmd(event, this.bullet, currentText, /x\s{1}/)
+          this.$emit('change-bullet-style', {id: this.bullet.id, newStyle: 'done'})
+        } else if (/<\s{1}/.test(shortCmd)) {
+          this.keepTextWithoutCmd(event, this.bullet, currentText, /<\s{1}/)
+          this.$emit('change-bullet-style', {id: this.bullet.id, newStyle: 'future'})
+        } else if (/>\s{1}/.test(shortCmd)) {
+          this.keepTextWithoutCmd(event, this.bullet, currentText, />\s{1}/)
+          this.$emit('change-bullet-style', {id: this.bullet.id, newStyle: 'migrate'})
+        } else if (/-\s{1}/.test(shortCmd)) {
+          this.keepTextWithoutCmd(event, this.bullet, currentText, /-\s{1}/)
+          this.$emit('change-bullet-style', {id: this.bullet.id, newStyle: 'note'})
         }
+      }
+      if (this.bullet.style === undefined && event.code === 'Tab') {
+        this.changeStyle(event, this.bullet, currentText, "tab")
       }
     },
   }

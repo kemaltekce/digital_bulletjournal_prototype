@@ -14,7 +14,8 @@ var app = new Vue({
         note: {content: '<i class="fas fa-minus"></i>', style: 'bullet-style-note'},
         migrate: {content: '<i class="fas fa-chevron-right"></i>', style: 'bullet-style-migrate'},
         future: {content: '<i class="fas fa-chevron-left"></i>', style: 'bullet-style-future'},
-        heading: {content: '', style: undefined},
+        h1: {content: '', style: undefined},
+        h2: {content: '', style: undefined},
         tab: {content: '', style: 'bullet-style-tab'}
       },
       displayNav: true,
@@ -33,7 +34,7 @@ var app = new Vue({
                 {id: this.uuid(), text: 'I am also a note.', position: 2, style: 'tab'},
                 {id: this.uuid(), text: 'I am also a note.', position: 3, style: 'done'},
                 {id: this.uuid(), text: 'I am also a note.', position: 4, style: undefined},
-                {id: this.uuid(), text: 'I am also a note.', position: 5, style: 'heading'},
+                {id: this.uuid(), text: 'I am also a note.', position: 5, style: 'h1'},
                 {id: this.uuid(), text: 'I am also a note.', position: 6, style: 'todo'},
                 {id: this.uuid(), text: 'I am also a note.', position: 7, style: 'tab'},
               ]
@@ -99,14 +100,16 @@ var app = new Vue({
   },
   methods: {
     swipeNavOrSidepage(event) {
-      if (event === 'right' && this.displayNav === false && this.sidepageMobileActive === false) {
-        this.changePageNavVisibility()
-      } else if (event === 'left' && this.displayNav === true) {
-        this.changePageNavVisibility()
-      } else if (event === 'left' && this.displayNav === false && this.sidepage.id !== undefined) {
-        this.sidepageMobileActive = true
-      } else if (event === 'right' && this.displayNav === false && this.sidepageMobileActive === true) {
-        this.sidepageMobileActive = false
+      if (this.mobileVersion === true) {
+        if (event === 'right' && this.displayNav === false && this.sidepageMobileActive === false) {
+          this.changePageNavVisibility()
+        } else if (event === 'left' && this.displayNav === true) {
+          this.changePageNavVisibility()
+        } else if (event === 'left' && this.displayNav === false && this.sidepage.id !== undefined) {
+          this.sidepageMobileActive = true
+        } else if (event === 'right' && this.displayNav === false && this.sidepageMobileActive === true) {
+          this.sidepageMobileActive = false
+        }
       }
     },
     uuid() {
@@ -156,6 +159,10 @@ var app = new Vue({
     loadPage(id) {
       const isID = (element) => element.id === id
       this.page = this.pages[this.pages.findIndex(isID)]
+      // close navigation after selecting and loading new page in mobile Version
+      if (this.mobileVersion === true) {
+        this.displayNav = false
+      }
       this.$nextTick(() => {
         this.focusFirstBullet()
       })
