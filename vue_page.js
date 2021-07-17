@@ -29,12 +29,14 @@ Vue.component('page', {
           v-on:remove-collection="removeCollection"
           v-on:add-collection="addCollection"
           v-on:change-pagenav-visibility="changePageNavVisibility"
+          v-on:change-sidepage-visibility="changeSidepageVisibility"
           v-on:iterate-page="iteratePage"></collection>
       </div>
     </div>
   `,
   methods: {
     changePageNavVisibility() {this.$emit('change-pagenav-visibility')},
+    changeSidepageVisibility() {this.$emit('change-sidepage-visibility')},
     editPageTitle(newTitle) {
       this.$emit('edit-page-title', {pagetype: this.pagetype, newTitle})
     },

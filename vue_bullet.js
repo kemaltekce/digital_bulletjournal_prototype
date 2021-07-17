@@ -22,8 +22,14 @@ Vue.component('bullet', {
   methods: {
     iteratePage() {this.$emit('iterate-page')},
     edit(event) {
-      var newText = event.target.innerText
-      this.$emit('edit-bullet-text', {id: this.bullet.id, newText: newText})
+      // edit text after next tick, because if sidepage is closed with the cmd
+      // /sidepage the bullet will not exist anymore to focus on. With the next
+      // tick the emit will stop propagating to the collection because it doesn't
+      // exist anymore.
+      this.$nextTick(() => {
+        var newText = event.target.innerText
+        this.$emit('edit-bullet-text', {id: this.bullet.id, newText: newText})
+      })
     },
     keepTextWithoutCmd(event, bullet, text, cmd) {
       // real commands start with a '/' and need to be removed from the text
@@ -97,6 +103,9 @@ Vue.component('bullet', {
       } else if (currentText.includes("/nav")) {
         this.keepTextWithoutCmd(event, this.bullet, currentText, "/nav")
         this.$emit('change-pagenav-visibility')
+      } else if (currentText.includes("/sidepage")) {
+        this.keepTextWithoutCmd(event, this.bullet, currentText, "/sidepage")
+        this.$emit('change-sidepage-visibility')
       } else {
         this.$emit('add-bullet', {currentBullet: this.bullet, currentText: currentText})
       }

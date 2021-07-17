@@ -201,6 +201,13 @@ var app = new Vue({
         this.sidepageMobileActive = false
       }
     },
+    changeSidepageVisibility() {
+      if (this.sidepage.id !== undefined) {
+        this.closeSidebar()
+      } else {
+        this.asSidebar()
+      }
+    },
     getNavArrow() {
       if (this.displayNav) {
         this.navarrow = 'fa-angle-double-left'

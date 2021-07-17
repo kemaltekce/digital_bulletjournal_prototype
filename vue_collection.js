@@ -17,12 +17,14 @@ Vue.component('collection', {
         v-on:remove-bullet-style="removeStyle"
         v-on:add-collection="addCollection"
         v-on:iterate-page="iteratePage"
-        v-on:change-pagenav-visibility="changePageNavVisibility"></bullet>
+        v-on:change-pagenav-visibility="changePageNavVisibility"
+        v-on:change-sidepage-visibility="changeSidepageVisibility"></bullet>
     </div>
   `,
   methods: {
     iteratePage() {this.$emit('iterate-page')},
     changePageNavVisibility() {this.$emit('change-pagenav-visibility')},
+    changeSidepageVisibility() {this.$emit('change-sidepage-visibility')},
     editBulletText({id, newText}) {
       this.$emit(
         'edit-bullet-text',

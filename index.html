@@ -2,8 +2,8 @@
 <html lang="en" spellcheck="false">
 <head>
   <title>Document</title>
-  <!-- <script src="https://unpkg.com/vue"></script> -->
-  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
   <script src="https://unpkg.com/vue2-touch-events"></script>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
   <link rel="stylesheet" href="style.css">
@@ -39,7 +39,9 @@
       v-on:add-collection="addCollection"
       v-on:change-pagenav-visibility="changePageNavVisibility"
       v-on:iterate-page="iteratePage(page.id)"
-      v-on:as-sidebar="asSidebar"></page>
+      v-on:as-sidebar="asSidebar"
+      v-on:close-sidebar="closeSidebar"
+      v-on:change-sidepage-visibility="changeSidepageVisibility"></page>
     <div v-bind:class="{ 'sidepage-mobile-active': sidepageMobileActive, 'mobile': mobileVersion }" class="sidepage-container" v-if=sidepage.id>
       <page
         v-if=sidepage.id
@@ -58,7 +60,8 @@
         v-on:add-collection="addCollection"
         v-on:change-pagenav-visibility="changePageNavVisibility"
         v-on:iterate-page="iteratePage(page.id)"
-        v-on:close-sidebar="closeSidebar"></page>
+        v-on:close-sidebar="closeSidebar"
+        v-on:change-sidepage-visibility="changeSidepageVisibility"></page>
     </div>
   </div>
 </body>
