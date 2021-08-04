@@ -1,5 +1,14 @@
+/* grey */
+/* background color: #F0F0F4 */
+/* box shadow mobile nav and sidebar: rgb(171 169 169) */
+/* box shadow collections and buttons: rgb(226 226 226) */
+/* paper */
+/* background color: #f9f5f1 */
+/* box shadow mobile nav and sidebar: #d0c8c0 */
+/* box shadow collections and buttons: #eae5e0 */
+
 body {
-  background-color: #F0F0F4;
+  background-color: #f9f5f1;
   font-size: 18px;
   font-family: Avenir;
   color: #101010;
@@ -23,7 +32,7 @@ body {
   position: fixed;
   bottom: 0;
   top: 0;
-  background-color: #F0F0F4;
+  background-color: #f9f5f1;
   width: -webkit-fill-available;
   z-index: 1;
 }
@@ -36,7 +45,7 @@ body {
   left: -105vw;
   transition: left 1s;
   border-radius: 10px;
-  box-shadow:  0px 0px 7px rgb(171 169 169);
+  box-shadow:  0px 0px 7px #d0c8c0;
 }
 
 .navigation-mobile-active {
@@ -48,7 +57,7 @@ body {
   right: -99vw;
   transition: right 1s;
   border-radius: 10px;
-  box-shadow: 0px 0px 7px rgb(171 169 169);
+  box-shadow: 0px 0px 7px #d0c8c0;
 }
 
 .sidepage-mobile-active {
@@ -77,8 +86,8 @@ body {
 }
 
 .highlighted {
-  box-shadow: 0px 0px 7px rgb(226, 226, 226);
-  background-color: #fff;
+  box-shadow: 0px 0px 7px #eae5e0;
+  background-color: #fffefc;
   font-weight: 500;
   color: #101010;
   border-left: 3px solid #dc3f40;
@@ -109,8 +118,8 @@ body {
 }
 
 .header-button {
-  box-shadow: 0px 0px 7px rgb(226, 226, 226);
-  background-color: #fff;
+  box-shadow: 0px 0px 7px #eae5e0;
+  background-color: #fffefc;
   margin: 4px 0px;
   border-radius: 5px;
   padding: 4px;
@@ -167,11 +176,11 @@ body {
 /* collection styles */
 
 .collection {
-  background-color: #fff;
+  background-color: #fffefc;
   margin: 40px 0px;
   padding: 30px 15px;
   border-radius: 10px;
-  box-shadow: 0px 0px 7px rgb(226, 226, 226);
+  box-shadow: 0px 0px 7px #eae5e0;
 }
 
 .collection:first-child {
